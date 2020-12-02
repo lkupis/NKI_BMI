@@ -1,0 +1,60 @@
+Title: SEM adults BMI
+                 Data: FILE IS /Users/lbk48/Desktop/SEM.csv;
+
+                        NOBSERVATIONS are 253;
+                       DEFINE:
+
+                          INT1 = DT2*BMIc;
+
+
+                      VARIABLE:
+                        NAMES ARE Motion AGE Sex HW BMI DT_1 DT_2 DT_3 DT_4 DT_5
+                        F_1 F_2 F_3 F_4 F_5 T_all DT1 DT2 DT3
+                         DT4 DT5 F1 F2 F3 F4 F5 Tall CWI15 CWI16 DF15 DF19
+                         Tower47 TMT21 VF34 VF30 VF32 BMIc DF3;
+                         MISSING = all (-999);
+                         USEV ARE CWI15 CWI16 DF3 DF19 Tower47 TMT21 VF34 VF30 VF32
+                         Motion AGE Sex BMIc DT2 INT1;
+
+                      MODEL:
+                                shift by TMT21 DF3 VF34;
+                                inhibit by CWI15 CWI16 Tower47;
+                                fluency by VF30 VF32 DF19;
+                                DF3 with DF19;
+                                DF3 with Tower47;
+                                VF32 with VF34;
+                                VF32 with VF30;
+                                VF30 with VF34;
+                                Inhibit with shift;
+                                fluency with shift;
+                                fluency with inhibit;
+
+                                 Inhibit on BMIc (b1);
+                                 Inhibit on DT2 (b2);
+                                 Inhibit on INT1 (b3);
+                                 Inhibit on Motion (b4);
+                                 Inhibit on Sex (b5);
+                                 Inhibit on AGE (b6);
+
+                         MODEL CONSTRAINT:
+
+                          NEW(low high med LowBMI MEDBMI HighBMI);
+                          low = -3;
+                          med = 0;
+                          high = 3;
+                          LowBMI = b2+ b3*low;
+                          MEDBMI = b2 + b3*med;
+                          HighBMI = b2 + b3*high;
+
+                          PLOT(Lof, medf, Hif);
+                          LOOP(XVAL, -2, 3, 0.2);
+                          Lof = (b1*low) + (b2 +b3*low)*XVAL;
+                          medf = (b1*med) + (b2 +b3*med)*XVAL;
+                          Hif = (b1*high) + (b2 +b3*high)*XVAL;
+
+                          PLOT:
+                          TYPE=plot2;
+
+
+                        OUTPUT:  SAMPSTAT stdyx RESIDUAL CINTERVAL;
+
