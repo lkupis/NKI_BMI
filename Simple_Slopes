@@ -1,0 +1,41 @@
+Title: SEM adults BMI
+             Data: FILE IS /Users/lbk48/Desktop/SEM.csv;
+
+                    NOBSERVATIONS are 253;
+            DEFINE:
+
+                  INT1 = DT4c*BMIL;
+
+
+
+
+                  VARIABLE:
+                    NAMES ARE Motion sex BMIc DT4c F4c CWI15 CWI16
+                    DF15 DF19 Tower47 TMT21 VF34 VF30 VF32 DF3 BMIL
+                     BMIH BMILc BMIHc;
+                     MISSING = all (-999);
+                     USEV ARE Motion sex BMIL DT4c CWI15 CWI16
+                     DF19 Tower47 TMT21 VF34 VF30 VF32 DF3 INT1;
+
+                  MODEL:
+                            shift by TMT21 DF3 VF34;
+                            inhibit by CWI15 CWI16 Tower47;
+                            fluency by VF30 VF32 DF19;
+                            DF3 with DF19;
+                            DF3 with Tower47;
+                            VF32 with VF34;
+                            VF32 with VF30;
+                            VF30 with VF34;
+                            Inhibit with shift;
+                            fluency with shift;
+                            fluency with inhibit;
+
+                          shift on INT1 DT4c Motion sex BMIL;
+                          fluency on INT1 DT4c Motion sex BMIL;
+
+
+
+
+
+
+                  OUTPUT:  SAMPSTAT stdyx RESIDUAL CINTERVAL MODINDICES;
