@@ -1,5 +1,5 @@
 #Once you concatenate the time series for all participants, run a kmeans analysis to receive information about how many CAPs or 'brain states' are present in your data.
-
+#the following script was ran in Matlab
 load('all.mat')
  
 clusters = { '4' '5' '6' }
@@ -24,3 +24,110 @@ save('sumd.mat','sumd')
 
 cd ..
 end
+
+
+#Once you finish running kmeans, you can now separate your results into the individual subject level again. 
+#the following script was ran in Matlab
+
+%% seperate individuals cluster assignments
+
+numsubj = 253    %%%must change!
+numwindows = 399   %%%must change!
+load ('idx.mat')
+mkdir('cluster_assignments')
+cd cluster_assignments
+
+for i = 1:numsubj
+    all_clusters = idx((((i-1)*numwindows)+1):(i*numwindows));
+    if i <10
+    save (strcat('cluster_assignments_s_00', num2str(i),'.mat'),'all_clusters')
+    elseif (i>9) && (i<100)
+    save (strcat('cluster_assignments_s_0', num2str(i),'.mat'),'all_clusters')
+    else i > 100
+    save (strcat('cluster_assignments_s_', num2str(i),'.mat'),'all_clusters')    
+    end
+    
+end
+
+
+#The last step for the CAP analysis involves extracting the brain dynamic metrics for each participant. 
+#The metrics include dwell time, transitions, and frequency of occurrence. 
+#Please see the manuscript for details on these metrics
+
+
+# The following code was conducted in matlab
+
+%%need to do each folder seperately because icab_dfnc_statevector_stats
+%%does not accept a variable for name of file
+
+
+k = 5  %% number of states
+
+cd /deep/uddin/work/Lauren/NKI/schaeffer/BMI/GS_regressed/kmeans/5/cluster_assignments/
+
+files = dir('*mat')
+
+for i = 1:length(files)
+    load(files(i).name);
+    [F, TM, MDT, NT] = icatb_dfnc_statevector_stats(all_clusters, k);  %%%all_clusters is name of individual subject mat files
+    Fall(i,:) = F(1,:);
+    MDTall(i,:) = MDT(1,:);
+    NTall(i,:) = NT(1,:);
+    x = TM(:)';
+    TMall(i,:) = x(1,:);
+end
+mkdir vectorstats
+cd vectorstats
+save('Frequency.mat','Fall')
+save('Dwell_time.mat','MDTall')
+save('Transitions.mat','NTall')
+save('TMall.mat','TMall')
+
+
+
+#The previous code calls to this function
+
+function [F, TM, MDT, NT] = icatb_dfnc_statevector_stats(a, k)
+
+Nwin = length(a);
+
+%% Fraction of time spent in each state
+F = zeros(1,k);
+for jj = 1:k
+    F(jj) = (sum(a == jj))/Nwin;
+end
+
+%% Number of Transitions
+NT = sum(abs(diff(a)) > 0);
+
+%% Mean dwell time in each state
+MDT = zeros(1,k);
+for jj = 1:k
+    start_t = find(diff(a==jj) == 1);
+    end_t = find(diff(a==jj) == -1);
+    if a(1)==jj
+        start_t = [0; start_t];
+    end
+    if a(end) == jj
+        end_t = [end_t; Nwin];
+    end
+    MDT(jj) = mean(end_t-start_t);
+    if isempty(end_t) & isempty(start_t)
+        MDT(jj) = 0;
+    end
+end
+
+%% Full Transition Matrix
+TM = zeros(k,k);
+for t = 2:Nwin
+    TM(a(t-1),a(t)) =  TM(a(t-1),a(t)) + 1;
+end
+
+for jj = 1:k
+    if sum(TM(jj,:)>0)
+        TM(jj,:) = TM(jj,:)/sum(a(1:Nwin-1) == jj);
+    else
+        TM(jj,jj) = 1;
+    end
+end
+
