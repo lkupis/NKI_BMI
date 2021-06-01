@@ -1,0 +1,40 @@
+INPUT INSTRUCTIONS
+
+  Title: SEM adults BMI
+             Data: FILE IS /Users/lbk48/Desktop/SEM.csv;
+
+                    NOBSERVATIONS are 253;
+                   DEFINE:
+                 INT1 = DT2*BMIc;
+
+
+                    VARIABLE:
+                      NAMES ARE Motion AGE Sex HW BMI DT_1 DT_2 DT_3 DT_4 DT_5
+                      F_1 F_2 F_3 F_4 F_5 T_all DT1 DT2 DT3
+                       DT4 DT5 F1 F2 F3 F4 F5 Tall CWI15 CWI16 DF15 DF19
+                       Tower47 TMT21 VF34 VF30 VF32 BMIc DF3;
+                       MISSING = all (-999);
+                       USEV ARE CWI15 CWI16 DF3 DF19 TMT21 VF34 VF30 VF32
+                       Motion AGE Sex BMIc DT2 INT1;
+                       ANALYSIS:
+                       BOOTSTRAP = 5000;
+
+                    MODEL:
+                              shift by TMT21 DF3 VF34;
+                              inhibit by CWI15 CWI16;
+                              fluency by VF30 VF32 DF19;
+                              DF3 with DF19;
+                              VF32 with VF34;
+                              VF32 with VF30;
+                              VF30 with VF34;
+                              Inhibit with shift;
+                              fluency with shift;
+                              fluency with inhibit;
+
+
+                      shift on INT1 DT2 Motion AGE Sex BMIc;
+
+
+
+                  OUTPUT:  SAMPSTAT stdyx RESIDUAL CINTERVAL(BOOTSTRAP);
+
