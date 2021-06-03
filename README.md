@@ -22,7 +22,7 @@ Here are steps for the full analysis:
 Statistical Analysis Steps:
 
 1. Confirmatory Factor Analysis- The code for this is included in teh Measurement_Model folder. This was done first to obtain the latent factors or dependent variables used in the analyses
-2. Interactions- First the moderation analysis was conducted to test for significant interactions between BMI and CAP dynamics (dwell time, transition, and frequency) for each CAP. There were 5 CAPs total in this study. 
+2. Interactions- First the moderation analysis was conducted to test for significant interactions between BMI and CAP dynamics (dwell time, transition, and frequency) for each CAP. There were 5 CAPs total in this study. Covariates are included in the structural equation models to control for their effects. 
 3. Next Interaction_Plots was used to create the interaction at simple slopes of BMI. In this analysis three levels of BMI were chosen (high, average, and low BMI). 
 4. Johnson_Neyman_Plot was conducted next to test for where the levels of significance were for each interaction on the basis of BMI. 
 5. The simple slope significance values were also computed using the code in the Simple Slopes folder
