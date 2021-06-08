@@ -27,9 +27,8 @@ Statistical Analysis Steps:
 4. Johnson_Neyman_Plot was conducted next to test for where the levels of significance were for each interaction on the basis of BMI. 
 5. The simple slope significance values were also computed using the code in the Simple Slopes folder
 6.  Following non-significant interactions, the Main_Effects were computed. 
-7.  Next, a mediation model was computed using code that can be observed in the Mediation folder
-8.  We also tested sensitivity of the results by removing outliers in BMI and re-computing the results. The outliers were identified in SPSS and the same analysis steps were conducted as depicted above
-9.  Next, we also tested if the main results remained after bootstrapping. Code for this analysis is within the Bootstrap folder. 
+7.  We also tested sensitivity of the results by removing outliers in BMI and re-computing the results. The outliers were identified in SPSS and the same analysis steps were conducted as depicted above
+8.  Next, we also tested if the main results remained after bootstrapping. Code for this analysis is within the Bootstrap folder. 
 
 
 If you have any questions please contact Lauren at lbk48@miami.edu. Thank you!
